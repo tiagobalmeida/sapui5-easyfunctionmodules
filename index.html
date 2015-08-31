@@ -20,7 +20,8 @@
 			// instantiate a caller pointing to the correct url on the server.
 			// This url should be a sicf node with the handler defined
 			var caller = new FunctionModuleCaller('/path/to/sicf/node');
-			// Call a function on the backend
+			// Call a function on the backend - this will give a 404 or a 
+			// forbidden because url above is not correct
 			caller.call('Z_MY_FUNCTION', {	IM_PARAM: 'value1', 
 											TA_PARAM: [{PROP1:'VAL1'},
 											           {PROP1:'VAL2'}
@@ -50,7 +51,7 @@
 			caller.setFunctionModuleMocker(oMocker);
 			// Tell FunctionModuleCaller to mock function Z_MY_FUNCTION2
 			caller.mockFunction('Z_MY_FUNCTION2');
-			// call function Z_MY_FUNCTION2
+			// call function Z_MY_FUNCTION2. It will be mocked
 			caller.call('Z_MY_FUNCTION2', {}, function(oBeData){
 				alert('I have been mocked!');
 			});
@@ -59,6 +60,6 @@
 	</head>
 	<body class="sapUiBody" role="application">
 		<div id="content"></div>
-		cenas
+		Please read the code.
 	</body>
 </html>
