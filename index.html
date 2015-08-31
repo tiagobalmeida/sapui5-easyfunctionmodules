@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+		<script src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+				id="sap-ui-bootstrap"
+				data-sap-ui-libs="sap.ui.commons"
+				data-sap-ui-theme="sap_goldreflection">
+		</script>
+		<!-- add sap.ui.table,sap.ui.ux3 and/or other libraries to 'data-sap-ui-libs' if required -->
+
+		<script>
+			/*
+				Demo usage of the easy function modules
+			*/
+			jQuery.sap.registerModulePath('easyfunctionmodules','./js/');
+			jQuery.sap.require('easyfunctionmodules.FunctionModuleCaller');
+			
+			// instantiate a caller pointing to the correct url on the server.
+			// This url should be a sicf node with the handler defined
+			var caller = new FunctionModuleCaller('/path/to/sicf/node');
+			// Call a function on the backend
+			caller.call('Z_MY_FUNCTION', {	IM_PARAM: 'value1', 
+											TA_PARAM: [{PROP1:'VAL1'},
+											           {PROP1:'VAL2'}
+														]
+			});
+			// We can also mock function module calls. For this, we register 
+			// a mocker object. This is an object with a single .call method.
+			// In a real world project you probably define this mocker in another file
+			// with more or less logic. For this demo, we keep it simple:
+			var oMocker = {
+					/**
+					* This method is called for all the functions that you define as being mocked
+					* with the mockFunctionModule().
+					* This function signature is exactly the same as the caller.call
+					*/
+					call: function(sFunctionModuleName, oInputData, 
+									fSuccess, fError){
+						switch(sFunctionModuleName){
+						case 'Z_MY_FUNCTION2':
+							// call the fSuccess method with mocked data.
+							fSuccess({value:'42'} /*data from 'backend' */);
+							break;
+						}
+					}
+			};
+			// Register the mocker defined above in the FunctionModuleCaller
+			caller.setFunctionModuleMocker(oMocker);
+			// Tell FunctionModuleCaller to mock function Z_MY_FUNCTION2
+			caller.mockFunction('Z_MY_FUNCTION2');
+			// call function Z_MY_FUNCTION2
+			caller.call('Z_MY_FUNCTION2', {}, function(oBeData){
+				alert('I have been mocked!');
+			});
+		</script>
+
+	</head>
+	<body class="sapUiBody" role="application">
+		<div id="content"></div>
+		cenas
+	</body>
+</html>
